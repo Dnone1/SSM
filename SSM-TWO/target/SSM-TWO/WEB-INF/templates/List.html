@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Information</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            color: #588c7e;
+            font-family: monospace;
+            font-size: 25px;
+            text-align: left;
+
+        }
+        th {
+            background-color: #588c7e;
+            color: white;
+        }
+        tr:nth-child(even) {background-color: #f2f2f2}
+
+        a {
+            color: #588c7e;
+            text-decoration: none;
+            transition: all 0.3s ease-in-out;
+
+        }
+        a:hover {
+            color: #fff;
+            background-color: #588c7e;
+            text-decoration: none;
+            transform: scale(1.1);
+        }
+
+
+
+    </style>
+</head>
+<body>
+<table>
+    <tr>
+        <th>Id</th>
+        <th>UserName</th>
+        <th>Password</th>
+        <th>Age</th>
+        <th>Gender</th>
+        <th>Email</th>
+        <th>操作</th>
+    </tr>
+    <tr th:each="user,statu : ${page.list}">
+<!--        statu的用法-->
+<!--        <td th:text="${statu.count}">John</td>-->
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.UserName}"></td>
+        <td th:text="${user.PassWord}"></td>
+        <td th:text="${user.age}"></td>
+        <td th:text="${user.gender}"></td>
+        <td th:text="${user.email}"></td>
+        <td>
+            <a th:href="@{'/text/getUserById/'+${user.id}}">修改</a>
+            <a th:href="@{'/text/delete/'+${user.id}}" onclick="del(event)">删除</a>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="6">
+<!--           th:if="${page.hasPreviousPage}"
+                判断是否存在上一页，如果存在，a标签才会显示，若果不存在a标签不会显示
+
+
+ -->
+            <a th:if="${page.hasPreviousPage}" th:href="@{/text/list/page/1}">首页</a>
+            <a th:if="${page.hasPreviousPage}" th:href="@{'/text/list/page/'+${page.prePage}}">上一页</a>
+<!--                <span th:each="num : ${page.navigatepageNums}">-->
+<!--                    <a th:href="@{'/text/list/page/'+${num}}" th:text="+${num}"></a>-->
+<!--                </span>-->
+
+            <span th:each="num : ${page.navigatepageNums}">
+                <a th:if="${page.pageNum==num}" th:href="@{'/text/list/page/'+${num}}" th:text="'['+${num}+']'" style="color:red;"></a>
+                <a th:if="${page.pageNum!=num}" th:href="@{'/text/list/page/'+${num}}" th:text="${num} "></a>
+            </span>
+
+            <a th:if="${page.hasNextPage}" th:href="@{'/text/list/page/'+${page.nextPage}}">下一页</a>
+            <a th:if="${page.hasNextPage}" th:href="@{'/text/list/page/'+${page.pages}}">尾页</a>
+        </td>
+    </tr>
+
+</table>
+</body>
+<script>
+    function del(event) {
+        const boo = confirm("确认删除吗")
+        if(boo) {
+            alert("删除成功！")
+        }else {
+            alert("取消")
+            event.preventDefault();  // 阻止默认链接跳转行为
+            return ;
+        }
+    }
+</script>
+</html>
